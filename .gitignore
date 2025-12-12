@@ -17,7 +17,8 @@
 /public/hot
 /public/storage
 /storage/*.key
-/storage/pail
+# storage path cleanup
+/storage/*.key
 /vendor
 Homestead.json
 Homestead.yaml
