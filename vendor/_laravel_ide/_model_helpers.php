@@ -8,20 +8,28 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
+     * @property string $id_document
+     * @property string $photo
+     * @property string $birth_date
      * @property string $password
      * @property string|null $phone_verified_at
      * @property string $phone
-     * @property string $name
+     * @property string $last_name
+     * @property string $first_name
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
      * @property-read int|null $tokens_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereFirstName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereLastName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhone($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhoneVerifiedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePassword($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereBirthDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhoto($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereIdDocument($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)

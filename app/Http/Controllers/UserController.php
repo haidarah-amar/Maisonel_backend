@@ -12,14 +12,23 @@ class UserController extends Controller
     public function register (Request $request){
     $validatedData = $request->validate([
         'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'birth_date' => 'required|date|max:255',
+        'photo' => 'required|string|max:255',
+        'id_document' => 'required|string|max:255',
         'phone' => 'required|string|max:15|unique:users',
         'password' => 'required|string|min:8|confirmed',
     ]);
 
     $user = User::create([
-        'name' => $validatedData['name'],
+        // 'first_name' => $validatedData['name'],
         'phone' => $validatedData['phone'],
         'password' => Hash::make($validatedData['password']),
+        'first_name' => $validatedData['first_name'],
+        'last_name' => $validatedData['last_name'],
+        'birth_date' => $validatedData['birth_date'],
+        'photo' => $validatedData['photo'],
+        'id_document' => $validatedData['id_document'],
     ]);
 
     return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);

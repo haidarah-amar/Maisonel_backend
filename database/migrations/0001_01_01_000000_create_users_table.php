@@ -30,9 +30,10 @@ return new class extends Migration
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
-        Schema::table('users', function (Blueprint $table) {
-          $table->string('profile_photo')->nullable()->after('password');
-           });
+        // Schema::table('users', function (Blueprint $table) {
+        //   $table->string('photo')->nullable()->after('password');
+        //   $table->string('id_document');
+        //    });
 
 
         Schema::create('sessions', function (Blueprint $table) {
