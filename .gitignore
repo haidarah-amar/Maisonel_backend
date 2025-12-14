@@ -19,7 +19,6 @@
 /storage/*.key
 # storage path cleanup
 /storage/*.key
-/vendor
 Homestead.json
 Homestead.yaml
 Thumbs.db
