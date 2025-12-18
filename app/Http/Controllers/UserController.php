@@ -14,23 +14,32 @@ class UserController extends Controller
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'birth_date' => 'required|date|max:255',
-        'photo' => 'required|string|max:255',
-        'id_document' => 'required|string|max:255',
+        'photo' => 'required|image|mimes:jpeg,png,jpg|max:50000',
+        'id_document' => 'required|image|mimes:jpeg,png,jpg|max:50000',
         'phone' => 'required|string|max:15|unique:users',
         'password' => 'required|string|min:8|confirmed',
     ]);
 
+    if ($request ->hasFile('photo')){
+        $path = $request->file('photo')->store('my photo' , 'public');
+        $validatedData['photo'] = $path;
+     }
+     if ($request ->hasFile('id_document')){
+        $path = $request->file('id_document')->store('my photo' , 'public');
+        $validatedData['id_document'] = $path;
+     }
+
     $user = User::create([
-        // 'first_name' => $validatedData['name'],
+        
         'phone' => $validatedData['phone'],
         'password' => Hash::make($validatedData['password']),
         'first_name' => $validatedData['first_name'],
         'last_name' => $validatedData['last_name'],
         'birth_date' => $validatedData['birth_date'],
         'photo' => $validatedData['photo'],
-        'id_document' => $validatedData['id_document'],
+        'id_document' => $validatedData['id_document']
     ]);
-
+     
     return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
 
   }
@@ -49,7 +58,7 @@ class UserController extends Controller
 
     return response()->json(['message' => 'Login successful',
      'User' => $user ,
-    'Token' => $token ], 201);
+    'Token' => $token ], 200);
 
   }
 
