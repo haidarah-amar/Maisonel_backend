@@ -30,7 +30,7 @@ class UserController extends Controller
      }
 
     $user = User::create([
-        
+
         'phone' => $validatedData['phone'],
         'password' => Hash::make($validatedData['password']),
         'first_name' => $validatedData['first_name'],
@@ -39,40 +39,46 @@ class UserController extends Controller
         'photo' => $validatedData['photo'],
         'id_document' => $validatedData['id_document']
     ]);
-     
+
     return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+    }
+    public function login(Request $request)
+    {
+        $validatedData = $request->validate([
+            'phone' => 'required|string|max:15',
+            'password' => 'required|string',
+        ]);
+        if (!Auth::attempt($request->only('phone', 'password'))) {
+            return response()->json(['message' => 'Invalid phone or password'], 401);
+        }
 
-  }
+        $user = User::where('phone', $request->phone)->first();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-  public function login (Request $request){
-    $validatedData = $request->validate([
-        'phone' => 'required|string|max:15',
-        'password' => 'required|string',
-    ]);
-    if (!Auth::attempt($request->only('phone', 'password'))) {
-        return response()->json(['message' => 'Invalid phone or password'], 401);
+        return response()->json(['message' => 'Login successful',
+         'User' => $user ,
+        'Token' => $token ], 200);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'User' => $user,
+            'Token' => $token
+        ], 201);
+
     }
 
-    $user = User::where('phone', $request-> phone)->first();
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    return response()->json(['message' => 'Login successful',
-     'User' => $user ,
-    'Token' => $token ], 200);
-
-  }
-
     public function logout(Request $request)
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    
-    $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
 
-    return response()->json([
-        'message' => 'Logged out successfully'
-    ], 200);
-}
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ], 200);
+    }
 
 
 }

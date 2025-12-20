@@ -47,6 +47,14 @@ return [
             'report' => false,
         ],
 
+        'pictures' => [
+            'driver' => 'local',
+            'root' => public_path('pictures'),
+            'url' => env('APP_URL') . '/pictures',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
