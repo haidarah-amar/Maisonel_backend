@@ -11,7 +11,7 @@ class AppartmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class AppartmentRequest extends FormRequest
             'description' => 'required|string',
             'price' => 'required|numeric',
             'location' => 'required|string|max:255',
-            'image_url' => 'nullable|url',
+            'image_url' => 'nullable|mimes:jpeg,png,jpg|max:50000',
         ];
     }
 }

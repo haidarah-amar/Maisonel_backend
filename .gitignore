@@ -16,9 +16,17 @@
 /public/build
 /public/hot
 /public/storage
+/public/pictures
 /storage/*.key
 # storage path cleanup
 /storage/*.key
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+vendor/
+.phpunit.result.cache
+npm-debug.log
+yarn-error.log
+.pest.phpunit.xml
+

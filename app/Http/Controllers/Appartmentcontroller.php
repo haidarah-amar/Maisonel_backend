@@ -23,13 +23,13 @@ class Appartmentcontroller extends Controller
     public function store(AppartmentRequest $request)
     {
         //user
-        // $user = Auth::user();
-        // if (!$user) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-        // if (!$user->type == 'owner') {
-        //     return response()->json(['message' => 'Only owners can create appartments'], 403);
-        // }
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        if ($user->type !== 'owner') {
+            return response()->json(['message' => 'Only owners can create appartments'], 403);
+        }
 
         // check
         // $validatedData = $request->validate([
@@ -45,22 +45,22 @@ class Appartmentcontroller extends Controller
             DB::beginTransaction();
             //create
             $appartment = Appartment::create([
-                'user_id' => 1,
+                'user_id' => $user->id,
                 'title' => $request['title'],
                 'description' => $request['description'],
                 'price' => $request['price'],
                 'location' => $request['location'],
-                'image_url' => $request['image_url'],
             ]);
             //img
             if ($request->hasFile('image_url')) {
-                $path = $this->uploadImage($request->file('url'), 'property');
-                $appartment->images()->create(['url' => $path]);
+                $path = $this->uploadImage($request->file('image_url'), 'appartment');
+                $appartment->image_url = $path;
+                $appartment->save();
             }
 
             // admin approve
             Requestt::create([
-                'user_id' => 1,
+                'user_id' => $user->id,
                 'requestable_id' => $appartment->id,
                 'requestable_type' => Appartment::class,
                 'status' => 'pending',
@@ -86,23 +86,19 @@ class Appartmentcontroller extends Controller
     public function update(Request $request, $id)
     {
 
-        // $user = Auth::user();
-        // if (!$user) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-        // if (!$user->type == 'owner') {
-        //     return response()->json(['message' => 'Only owners can create appartments'], 403);
-        // }
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        if (!$user->type == 'owner') {
+            return response()->json(['message' => 'Only owners can create appartments'], 403);
+        }
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|text',
             'price' => 'required|numeric',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
         ]);
-
-        // if ($validatedData->fails()) {
-        //     return response()->json(['errors' => $validatedData->errors()], 422);
-        // }
         try {
             DB::beginTransaction();
             $appartment=Appartment::findOrFail($id);
