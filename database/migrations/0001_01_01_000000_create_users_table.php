@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('photo');
             $table->string('id_document');
+            $table ->string('role')->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
