@@ -21,7 +21,6 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('photo')->nullable();
             $table->string('id_document');
-            $table->enum('type',['owner','tenant','admin'])->default('tenant');
             $table->rememberToken();
             $table->timestamps();
         });
