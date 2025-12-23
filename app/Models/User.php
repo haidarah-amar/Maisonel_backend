@@ -19,7 +19,15 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-    protected $guarded = [];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'phone',
+        'password',
+        'birth_date',
+        'photo',
+        'id_document',
+    ];
 
    
     /**
@@ -35,6 +43,22 @@ class User extends Authenticatable
     public function appartments()
     {
         return $this->hasMany(Appartment::class);
+    }
+
+    /**
+     * Appartments owned (created) by this user.
+     */
+    public function ownerAppartments()
+    {
+        return $this->hasMany(Appartment::class, 'owner_id');
+    }
+
+    /**
+     * Appartments rented by this user (current tenant).
+     */
+    public function rentedAppartments()
+    {
+        return $this->hasMany(Appartment::class, 'user_id');
     }
     /**
      * The attributes that should be cast.

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Http\Requests\UpdateApartmentRequest;
 use App\Models\Appartment;
 use App\uplodImage;
 use Illuminate\Http\Request;
@@ -11,157 +12,209 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Requestt;
 use App\Http\Requests\AppartmentRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+
 class Appartmentcontroller extends Controller
 {
     use uplodImage;
+
+    
     public function index()
     {
-        $appartment = Appartment::where('is_avilable', true)->get();
-        return response()->json($appartment, 200);
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $appartments = Appartment::where('owner_id', $user->id)->where('is_approved', true)->get();
+        return response()->json($appartments, 200);
     }
 
     public function store(AppartmentRequest $request)
     {
-        //user
-        // $user = Auth::user();
-        // if (!$user) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-        // if (!$user->type == 'owner') {
-        //     return response()->json(['message' => 'Only owners can create appartments'], 403);
-        // }
+        // Ensure request is authenticated
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
 
-        // check
-        // $validatedData = $request->validate([
-        //     'title' => 'required|string|max:255',
-        //     'description' => 'required|string',
-        //     'price' => 'required|numeric',
-        //     'location' => 'required|string|max:255',
-        //     'image_url' => 'nullable|url',
-        // ]);
+        $validatedData = $request->validated();
 
-        //start
-        try {
-            DB::beginTransaction();
-            //create
-            $appartment = Appartment::create([
-                'user_id' => 1,
-                'title' => $request['title'],
-                'description' => $request['description'],
-                'price' => $request['price'],
-                'location' => $request['location'],
-                'image_url' => $request['image_url'],
-            ]);
-            //img
-            if ($request->hasFile('image_url')) {
-                $path = $this->uploadImage($request->file('url'), 'property');
-                $appartment->images()->create(['url' => $path]);
+        // Force owner_id to the authenticated user and ignore any client-supplied user_id
+        $validatedData['owner_id'] = $user->id;
+       
+
+        // Handle multiple image uploads or an array of image URLs/paths
+        $images = [];
+        // Files uploaded as image_url[]
+        if ($request->hasFile('image_url')) {
+            $files = $request->file('image_url');
+            if (!is_array($files)) {
+                $files = [$files];
             }
+            foreach ($files as $file) {
+                if ($file && $file->isValid()) {
+                    $images[] = $file->store('appartment_images', 'public');
+                }
+            }
+        }
 
-            // admin approve
-            Requestt::create([
-                'user_id' => 1,
-                'requestable_id' => $appartment->id,
-                'requestable_type' => Appartment::class,
-                'status' => 'pending',
-            ]);
+        // If client provided image_url as array of strings (URLs or paths), merge them
+        if (isset($validatedData['image_url']) && is_array($validatedData['image_url'])) {
+            foreach ($validatedData['image_url'] as $val) {
+                if (is_string($val) && $val !== '') {
+                    $images[] = $val;
+                }
+            }
+        }
 
-            DB::commit();
+        // Merge any remote URLs provided under image_urls
+        if (isset($validatedData['image_urls']) && is_array($validatedData['image_urls'])) {
+            foreach ($validatedData['image_urls'] as $url) {
+                if (is_string($url) && $url !== '') {
+                    $images[] = $url;
+                }
+            }
+        }
 
-            return response()->json([
-                'message' => 'the appartment is created wait to be approved by the admin !',
-                'data' => $appartment,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'error' => 'error while creating the appartment',
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ], 500);
+        // Normalize to null when no images
+        $validatedData['image_url'] = count($images) ? $images : null;
+
+        $apt = Appartment::create($validatedData);
+
+        return response()->json($apt, 201);
+        
+    }
+    public function update(UpdateApartmentRequest $request, $id)
+{
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    $appartment = Appartment::findOrFail($id);
+
+    if ($appartment->owner_id !== $user->id) {
+        return response()->json(['message' => 'This apartment does not belong to you'], 403);
+    }
+
+    $validatedData = $request->validated();
+    // prevent editing owner_id and user_id
+    unset( $validatedData['owner_id']);
+
+    // new images array and handling uploads/URLs
+    $images = is_array($appartment->image_url) ? $appartment->image_url : [];
+
+    // the uploaded files
+    if ($request->hasFile('image_url')) {
+        foreach ((array) $request->file('image_url') as $file) {
+            if ($file && $file->isValid()) {
+                $images[] = $file->store('appartment_images', 'public');
+            }
         }
     }
 
-    public function update(Request $request, $id)
-    {
+    // new image URLs
+    if (isset($validatedData['image_urls']) && is_array($validatedData['image_urls'])) {
+        foreach ($validatedData['image_urls'] as $url) {
+            if (is_string($url) && $url !== '') {
+                $images[] = $url;
+            }
+        }
+    }
 
-        // $user = Auth::user();
-        // if (!$user) {
-        //     return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-        // if (!$user->type == 'owner') {
-        //     return response()->json(['message' => 'Only owners can create appartments'], 403);
-        // }
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|text',
-            'price' => 'required|numeric',
-            'image_url' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+    // Remove image_url and image_urls from validated data to avoid conflicts
+    unset($validatedData['image_url'], $validatedData['image_urls']);
+
+    // update other fields
+    if (!empty($validatedData)) {
+        $appartment->update($validatedData);
+    }
+
+    // update images if any new ones were added
+    if ($request->hasFile('image_url') || $request->has('image_urls')) {
+        $appartment->update([
+            'image_url' => count($images) ? $images : null
         ]);
-
-        // if ($validatedData->fails()) {
-        //     return response()->json(['errors' => $validatedData->errors()], 422);
-        // }
-        try {
-            DB::beginTransaction();
-            $appartment=Appartment::findOrFail($id);
-            if(!$appartment){
-                return response()->json(['masseg:'=>'not found'],404);
-            }
-            $appartment->update([
-                'user_id' => 1,
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-                'price' => $request->input('price'),
-                'image_url' => $request->input('image_url'),
-            ]);
-            if ($request->hasFile('image_url')) {
-                $path = $this->uploadImage($request->file('url'), 'property');
-                $appartment->images()->create(['url' => $path]);
-            }
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'error' => 'error while creating the appartment',
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ], 500);
-        }
     }
+
+    return response()->json([
+        'message' => 'Apartment updated successfully',
+        'data' => $appartment
+    ], 200);
+}
+
     public function show($id)
     {
-        $appartment = Appartment::find($id);
+       $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+            $appartment = Appartment::findOrFail($id);
+
         if (!$appartment) {
-            return response()->json(['message' => 'Appartment not found'], 404);
+            return response()->json(['message' => 'Apartment does not exist'], 404);
+        }
+
+        if ($appartment->owner_id !== $user->id) {
+            return response()->json(['message' => 'This apartment does not belong to you'], 403);
         }
         return response()->json($appartment, 200);
     }
 
     public function destroy($id)
     {
-        $user = Auth::user();
+         $user = Auth::user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        if (!$user->type == 'owner') {
-            return response()->json(['message' => 'Only owners can create appartments'], 403);
-        }
-        $appartment = Appartment::find($id);
+
+            $appartment = Appartment::findOrFail($id);
+
         if (!$appartment) {
-            return response()->json(['message' => 'Appartment not found'], 404);
+            return response()->json(['message' => 'Apartment does not exist'], 404);
+        }
+        
+        if ($appartment->owner_id !== $user->id) {
+            return response()->json(['message' => 'This apartment does not belong to you'], 403);
         }
         $appartment->delete();
-        return response()->json(['message' => 'Appartment deleted successfully'], 204);
+        return response()->json(['message' => 'Appartment deleted successfully'], 200);
     }
 
-    public function getAppartmentUser($id)
-    {
-        $user = Appartment::findOrFail($id)->user;
+    public function deleteImage($id, $index)
+{
+    $user = Auth::user();
+    $appartment = Appartment::findOrFail($id);
 
-        return response()->json($user, 200);
+    if ($appartment->owner_id !== $user->id) {
+        return response()->json(['message' => 'Forbidden'], 403);
     }
+
+    $images = $appartment->image_url ?? [];
+
+    if (!isset($images[$index])) {
+        return response()->json(['message' => 'Image not found'], 404);
+    }
+
+    $path = $images[$index];
+
+    if (!str_starts_with($path, 'http')) {
+        Storage::disk('public')->delete($path);
+    }
+
+    unset($images[$index]);
+    $images = array_values($images);
+
+    $appartment->update([
+        'image_url' => count($images) ? $images : null
+    ]);
+
+    return response()->json(['message' => 'Image deleted successfully']);
+}
+
+
+    
 }
 // }

@@ -5,7 +5,46 @@ namespace App\Models {
     /**
      * App\Models\Appartment
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property array|null $image_url
+     * @property string $location
+     * @property mixed $views
+     * @property mixed $rating
+     * @property mixed $type
+     * @property mixed $is_favorite
+     * @property mixed $bathrooms
+     * @property mixed $bedrooms
+     * @property bool $is_approved
+     * @property float $price
+     * @property string $description
+     * @property string $title
+     * @property mixed $size
+     * @property string $address
+     * @property mixed $user_id
+     * @property mixed $owner_id
+     * @property int $id
      * @property-read \App\Models\User $owner
+     * @property-read \App\Models\User $renter
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereOwnerId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereAddress($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereSize($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereDescription($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment wherePrice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereIsApproved($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereBedrooms($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereBathrooms($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereIsFavorite($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereRating($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereViews($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereLocation($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereImageUrl($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment query()
@@ -616,8 +655,9 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
-     * @property string $id_document
-     * @property string $photo
+     * @property string $role
+     * @property string|null $id_document
+     * @property string|null $photo
      * @property string $birth_date
      * @property string $password
      * @property string|null $phone_verified_at
@@ -627,6 +667,10 @@ namespace App\Models {
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Appartment> $appartments
      * @property-read int|null $appartments_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Appartment> $ownerAppartments
+     * @property-read int|null $ownerAppartments_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Appartment> $rentedAppartments
+     * @property-read int|null $rentedAppartments_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
      * @property-read int|null $tokens_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -640,6 +684,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereBirthDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhoto($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereIdDocument($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRole($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)

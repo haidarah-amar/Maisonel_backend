@@ -20,23 +20,19 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::group(
     [
-        'prefix' => 'appartment'
+        'prefix' => 'appartment',
+        'middleware' => 'auth:sanctum',
     ],
     function () {
         Route::get('/index', [Appartmentcontroller::class, 'index']);
         Route::post('/create', [Appartmentcontroller::class, 'store']);
         Route::post('/update/{id}', [Appartmentcontroller::class, 'update']);
-        Route::delete('/destroy', [Appartmentcontroller::class, 'destroy']);
+        Route::delete('/destroy/{id}', [Appartmentcontroller::class, 'destroy']);
         Route::get('/show/{id}', [Appartmentcontroller::class, 'show']);
+        Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);
+        // DELETE /api/appartments/images/{id}/index/{index}
 
-
+       
 
     }
 );
-
-// This is a test from fares <3
-
-// this is also a test but from antigravity
-
-
-// Route::apiResource('tasks', TaskController::class);

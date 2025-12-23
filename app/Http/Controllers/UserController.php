@@ -14,30 +14,47 @@ class UserController extends Controller
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'birth_date' => 'required|date|max:255',
-        'photo' => 'required|image|mimes:jpeg,png,jpg|max:50000',
-        'id_document' => 'required|image|mimes:jpeg,png,jpg|max:50000',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:50000',
+        'id_document' => 'nullable|image|mimes:jpeg,png,jpg|max:50000',
         'phone' => 'required|string|max:15|unique:users',
         'password' => 'required|string|min:8|confirmed',
     ]);
+    // Use null when no file is present instead of empty strings
+    $photo_path = null;
+    $id_path = null;
 
-    if ($request ->hasFile('photo')){
-        $path = $request->file('photo')->store('my photo' , 'public');
-        $validatedData['photo'] = $path;
-     }
-     if ($request ->hasFile('id_document')){
-        $path = $request->file('id_document')->store('my photo' , 'public');
-        $validatedData['id_document'] = $path;
-     }
+    // Handle photo upload safely
+    if ($request->hasFile('photo')) {
+        $file = $request->file('photo');
+        if ($file->isValid()) {
+            // store under 'photos' directory on the 'public' disk
+            $photo_path = $file->store('photos', 'public');
+            $validatedData['photo'] = $photo_path;
+        } else {
+            return response()->json(['message' => 'Invalid photo upload'], 422);
+        }
+    }
 
+    // Handle id_document upload safely
+    if ($request->hasFile('id_document')) {
+        $file = $request->file('id_document');
+        if ($file->isValid()) {
+            $id_path = $file->store('id_documents', 'public');
+            $validatedData['id_document'] = $id_path;
+        } else {
+            return response()->json(['message' => 'Invalid id_document upload'], 422);
+        }
+    }
+
+    // Create user (ensure password is hashed)
     $user = User::create([
-
         'phone' => $validatedData['phone'],
         'password' => Hash::make($validatedData['password']),
         'first_name' => $validatedData['first_name'],
         'last_name' => $validatedData['last_name'],
         'birth_date' => $validatedData['birth_date'],
-        'photo' => $validatedData['photo'],
-        'id_document' => $validatedData['id_document']
+        'photo' => $photo_path,
+        'id_document' => $id_path
     ]);
 
     return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);

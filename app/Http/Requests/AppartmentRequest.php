@@ -11,7 +11,10 @@ class AppartmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // Allow authenticated users to make this request.
+        // If you need additional authorization logic (e.g. only owners),
+        // implement checks here like: return auth()->check() && auth()->user()->role === 'owner';
+        return true;
     }
 
     /**
@@ -22,11 +25,24 @@ class AppartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'address' => 'required|string',
+            'size' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'location' => 'required|string|max:255',
-            'image_url' => 'nullable|url',
+            // is_approved stored as boolean in DB, but allow it to be optional during creation
+            'is_approved' => 'sometimes|boolean',
+            'bedrooms' => 'required|integer',
+            'bathrooms' => 'required|integer',
+            // is_favorite is stored as enum('yes','no') in DB — validate accordingly
+            'is_favorite' => 'nullable|in:yes,no',
+            'type' => 'required|in:apartment,house,studio,villa',
+            'rating' => 'nullable|in:1,2,3,4,5',
+            'views' => 'nullable|integer',
+            'location' => 'required|string',
+            // allow multiple images as array of files or array of URLs; each file max 5MB
+            'image_url' => 'nullable|array',
+            'image_url.*' => 'nullable|file|image|mimes:jpg,jpeg,png,gif,svg|max:5120',
         ];
     }
 }
