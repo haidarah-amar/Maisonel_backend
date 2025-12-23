@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Appartment extends Model
 {
+
     protected $guarded = [];
     protected $casts = [
         'image_url' => 'array',

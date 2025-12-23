@@ -33,12 +33,15 @@ class Appartmentcontroller extends Controller
     public function store(AppartmentRequest $request)
     {
         // Ensure request is authenticated
+
         $user = Auth::user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+
         $validatedData = $request->validated();
+
 
         // Force owner_id to the authenticated user and ignore any client-supplied user_id
         $validatedData['owner_id'] = $user->id;
@@ -51,6 +54,7 @@ class Appartmentcontroller extends Controller
             $files = $request->file('image_url');
             if (!is_array($files)) {
                 $files = [$files];
+
             }
             foreach ($files as $file) {
                 if ($file && $file->isValid()) {
@@ -58,6 +62,7 @@ class Appartmentcontroller extends Controller
                 }
             }
         }
+
 
         // If client provided image_url as array of strings (URLs or paths), merge them
         if (isset($validatedData['image_url']) && is_array($validatedData['image_url'])) {
@@ -67,6 +72,8 @@ class Appartmentcontroller extends Controller
                 }
             }
         }
+
+
 
         // Merge any remote URLs provided under image_urls
         if (isset($validatedData['image_urls']) && is_array($validatedData['image_urls'])) {
@@ -79,14 +86,20 @@ class Appartmentcontroller extends Controller
 
         // Normalize to null when no images
         $validatedData['image_url'] = count($images) ? $images : null;
+          // admin approve
+            // Requestt::create([
+            //     'user_id' => $user->id,
+            //     'requestable_id' => $appartment->id,
+            //     'requestable_type' => Appartment::class,
+            //     'status' => 'pending',
+            // ]);
 
         $apt = Appartment::create($validatedData);
 
         return response()->json($apt, 201);
         
     }
-    public function update(UpdateApartmentRequest $request, $id)
-{
+    public function update(UpdateApartmentRequest $request, $id){
     $user = Auth::user();
     if (!$user) {
         return response()->json(['message' => 'Unauthorized'], 401);
@@ -122,6 +135,7 @@ class Appartmentcontroller extends Controller
             }
         }
     }
+
 
     // Remove image_url and image_urls from validated data to avoid conflicts
     unset($validatedData['image_url'], $validatedData['image_urls']);

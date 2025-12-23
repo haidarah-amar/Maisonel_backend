@@ -11,6 +11,7 @@ class AppartmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
+
         // Allow authenticated users to make this request.
         // If you need additional authorization logic (e.g. only owners),
         // implement checks here like: return auth()->check() && auth()->user()->role === 'owner';
@@ -43,6 +44,6 @@ class AppartmentRequest extends FormRequest
             // allow multiple images as array of files or array of URLs; each file max 5MB
             'image_url' => 'nullable|array',
             'image_url.*' => 'nullable|file|image|mimes:jpg,jpeg,png,gif,svg|max:5120',
-        ];
+                    ];
     }
 }
