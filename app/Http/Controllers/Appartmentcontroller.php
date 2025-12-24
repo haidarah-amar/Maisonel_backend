@@ -22,11 +22,12 @@ class Appartmentcontroller extends Controller
     
     public function index()
     {
-        $user = Auth::user();
+    
+        $user = Auth::guard('sanctum')->user();
         if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => $user,'Unauthorized'], 401);
         }
-        $appartments = Appartment::where('owner_id', $user->id)->where('is_approved', true)->get();
+        $appartments = Appartment::where('owner_id', $user->id)->where('is_approved', false)->get();
         return response()->json($appartments, 200);
     }
 
@@ -166,10 +167,6 @@ class Appartmentcontroller extends Controller
         }
 
             $appartment = Appartment::findOrFail($id);
-
-        if (!$appartment) {
-            return response()->json(['message' => 'Apartment does not exist'], 404);
-        }
 
         if ($appartment->owner_id !== $user->id) {
             return response()->json(['message' => 'This apartment does not belong to you'], 403);

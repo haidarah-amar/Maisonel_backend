@@ -18,7 +18,7 @@ Route::get('/appartment/index', [Appartmentcontroller::class, 'index']);
 Route::group(
     [
         'prefix' => 'appartment',
-        'middleware' => 'auth:sanctum ',
+        'middleware' => 'auth:sanctum',
     ],
     function () {
         Route::post('/create', [Appartmentcontroller::class, 'store']);
@@ -26,7 +26,7 @@ Route::group(
         Route::delete('/destroy/{id}', [Appartmentcontroller::class, 'destroy']);
         Route::get('/show/{id}', [Appartmentcontroller::class, 'show']);
         Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);
-        // DELETE /api/appartments/images/{id}/index/{index}
+        
 
        
 
