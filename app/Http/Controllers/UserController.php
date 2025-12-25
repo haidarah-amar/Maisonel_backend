@@ -19,9 +19,6 @@ class UserController extends Controller
         'phone' => 'required|string|max:15|unique:users',
         'password' => 'required|string|min:8|confirmed',
     ]);
-    // Use null when no file is present instead of empty strings
-    $photo_path = null;
-    $id_path = null;
 
     // Handle photo upload safely
     if ($request->hasFile('photo')) {

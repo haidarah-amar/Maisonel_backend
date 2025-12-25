@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Appartmentcontroller;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OwnerOrderController;
 use App\Models\Appartment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,12 +27,27 @@ Route::group(
         Route::post('/update/{id}', [Appartmentcontroller::class, 'update']);
         Route::delete('/destroy/{id}', [Appartmentcontroller::class, 'destroy']);
         Route::get('/show/{id}', [Appartmentcontroller::class, 'show']);
-        Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);
-        
-
-       
-
+        Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);   
+    }    
+);
+// Orders for User's Booking
+Route::group(['prefix' => 'order/user', 'middleware' => 'auth:sanctum'], function () {
+    
+    Route::post('/store', [App\Http\Controllers\OrderController::class, 'store']);
+    Route::post('/update/{id}', [App\Http\Controllers\OrderController::class, 'update']);
+    Route::get('/index', [OrderController::class, 'index']);
+    Route::get('/show/{id}', [OrderController::class, 'show']);
+    Route::delete('/cancle/{id}' , [OrderController::class, 'destroy']);
+    Route::get('/unavailable_dates/{appartmentId}', [OrderController::class, 'unavailableDates']);
     }
-
 );
 
+// Orders for Owner's Appartments
+Route::group(['prefix' => 'order/owner', 'middleware' => 'auth:sanctum'], function () {
+    
+    Route::get('/orders', [OwnerOrderController::class, 'index']);
+    Route::get('/show/{id}', [OwnerOrderController::class, 'show']);
+    Route::post('/reject/{id}' , [OwnerOrderController::class, 'reject']);
+    Route::post('/approve/{id}' , [OwnerOrderController::class, 'approve']);
+    }
+);

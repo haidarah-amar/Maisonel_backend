@@ -41,25 +41,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function appartments()
-    {
-        return $this->hasMany(Appartment::class);
-    }
-
-    /**
-     * Appartments owned (created) by this user.
-     */
+    // Appartments owned by this user
     public function ownerAppartments()
     {
         return $this->hasMany(Appartment::class, 'owner_id');
     }
 
     /**
-     * Appartments rented by this user (current tenant).
+     * Appartments rented by this user (orders).
      */
-    public function rentedAppartments()
+    public function orders()
     {
-        return $this->hasMany(Appartment::class, 'user_id');
+        return $this->hasMany(Order::class, 'user_id');
     }
     /**
      * The attributes that should be cast.
