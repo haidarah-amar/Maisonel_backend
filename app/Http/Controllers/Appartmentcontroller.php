@@ -27,7 +27,7 @@ class Appartmentcontroller extends Controller
         if (!$user) {
             return response()->json(['message' => $user,'Unauthorized'], 401);
         }
-        $appartments = Appartment::where('owner_id', $user->id)->where('is_approved', false)->get();
+        $appartments = Appartment::where('owner_id', $user->id)->where('is_approved', true)->get();
         return response()->json($appartments, 200);
     }
 
@@ -35,7 +35,7 @@ class Appartmentcontroller extends Controller
     {
         // Ensure request is authenticated
 
-        $user = Auth::user();
+        $user = Auth::guard('sanctum')->user();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }

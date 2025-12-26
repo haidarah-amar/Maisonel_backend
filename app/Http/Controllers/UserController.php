@@ -67,18 +67,14 @@ class UserController extends Controller
         }
 
         $user = User::where('phone', $request->phone)->first();
+        if ($user->is_active == false) {
+            return response()->json(['message' => 'Your account is not active. Please wait until an admin activates it.'], 403);
+        }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(['message' => 'Login successful',
          'User' => $user ,
         'Token' => $token ], 200);
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'User' => $user,
-            'Token' => $token
-        ], 201);
 
     }
 

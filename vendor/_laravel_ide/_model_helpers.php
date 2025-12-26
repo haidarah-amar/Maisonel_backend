@@ -8,7 +8,6 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property array|null $image_url
-     * @property string $location
      * @property mixed $views
      * @property mixed $rating
      * @property mixed $type
@@ -19,7 +18,8 @@ namespace App\Models {
      * @property string $description
      * @property string $title
      * @property mixed $size
-     * @property string $address
+     * @property string $location
+     * @property string $city
      * @property mixed $owner_id
      * @property int $id
      * @property-read \App\Models\User $owner
@@ -29,7 +29,8 @@ namespace App\Models {
      * @property-read int|null $orders_count
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereOwnerId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereAddress($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereCity($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereLocation($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereSize($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereTitle($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereDescription($value)
@@ -40,7 +41,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereRating($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereViews($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereLocation($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereImageUrl($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereUpdatedAt($value)
@@ -1005,6 +1005,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
+     * @property bool $is_active
      * @property string $role
      * @property string|null $id_document
      * @property string|null $photo
@@ -1035,6 +1036,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User wherePhoto($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereIdDocument($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRole($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereIsActive($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)

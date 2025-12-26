@@ -14,7 +14,8 @@ return new class extends Migration {
         Schema::create('appartments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
-            $table->string('address');
+            $table->string('city');
+            $table->string('location');
             $table->integer('size');
             $table->string('title');
             $table->text('description');
@@ -25,7 +26,6 @@ return new class extends Migration {
             $table->enum('type',['apartment','house','studio','villa'])->default('apartment');
             $table->enum('rating',['1','2','3','4','5'])->nullable();
             $table->integer('views')->default(0);
-            $table->string('location');
             $table->string('image_url')->nullable();
             $table->timestamps();
         });

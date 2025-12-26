@@ -26,19 +26,14 @@ class AppartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address' => 'required|string',
+            'city' => 'required|string',
             'size' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            // is_approved stored as boolean in DB, but allow it to be optional during creation
-            'is_approved' => 'sometimes|boolean',
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
-            // is_favorite is stored as enum('yes','no') in DB — validate accordingly
             'type' => 'required|in:apartment,house,studio,villa',
-            'rating' => 'nullable|in:1,2,3,4,5',
-            'views' => 'nullable|integer',
             'location' => 'required|string',
             // allow multiple images as array of files or array of URLs; each file max 5MB
             'image_url' => 'nullable|array',

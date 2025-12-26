@@ -2,57 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appartment;
 use Illuminate\Http\Request;
 use App\Models\Requestt;
+use App\Models\User;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
 {
-    public function index()
+    public function allUsers()
     {
-        $requests = Requestt::where('status', 'pending')->with('requestable')->get();
-        return response()->json($requests);
+        $users = User::where('is_active', false)->get();
+        return response()->json($users);
     }
 
-    // قبول الطلب (تغيير الحالة إلى approved)
-    public function approveAppartment(Request $request, $id)
+    public function allApartments()
     {
-        $user = Auth::user();
-        if (!$user || $user->type !== 'admin') {
-            return response()->json(['error' => 'غير مصرح لك بالوصول إلى هذا المورد.'], 403);
-        }
-
-        $request = Requestt::findOrFail($id);
-
-        if (!$request) {
-            return response()->json(['error' => 'الطلب غير موجود.'], 404);
-        }
-
-        $request->status = 'accepted';  // تأكد أنها نصية
-        $request->save();
-
-        // تفعيل العقار المرتبط عند الموافقة
-        $appartment = $request->requestable;
-        if ($appartment) {
-            $appartment->is_avilable = true;
-            $appartment->save();
-            return response()->json(['message' => 'تم قبول الطلب وتفعيل العقار.']);
-        }
-
+        $apartments = Appartment::where('is_approved', false)->get();
+        return response()->json($apartments);
     }
 
+    // =========================================================================================
 
-    // رفض الطلب (تغيير الحالة إلى rejected)
-    public function rejectAppartment(Request $request, $id)
+    public function approveUser(Request $request, $id)
     {
-        $user = Auth::user();
-        if (!$user || $user->type !== 'admin') {
-            return response()->json(['error' => 'غير مصرح لك بالوصول إلى هذا المورد.'], 403);
+
+
+        $user = User::findOrFail($id);
+
+        if (! $user) {
+            return response()->json(['error' => 'There is no user, who has this id'], 404);
         }
         
-        $requestt = Requestt::findOrFail($id);
-        $requestt->status = 'rejected';
-        $requestt->save();
+        User::where('id', $id)->update(['is_active' => true]);
+        return response()->json(['message' => 'User approved successfully.'] , 200);
+        
+    }
 
-        return response()->json(['message' => 'تم رفض الطلب.']);
+        public function rejectUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if (! $user) {
+            return response()->json(['error' => 'There is no user, who has this id'], 404);
+        }
+        
+        User::where('id', $id)->update(['is_active' => false]);
+        return response()->json(['message' => 'User rejected successfully.'] , 200);
+
+    }
+
+    // ===============================================================================================================
+
+
+    public function approveAppartment(Request $request, $id)
+    {
+        $apartment = Appartment::findOrFail($id);
+
+        if (!$apartment) {
+            return response()->json(['error' => 'There is no apartment with this id'], 404);
+        }
+
+        Appartment::where('id', $id)->update(['is_approved' => true]);
+
+            return response()->json(['message' => 'The apartment has been approved successfully.'] , 200);
+        }
+
+    public function rejectAppartment(Request $request, $id)
+    {
+        $apartment = Appartment::findOrFail($id);
+
+        if (!$apartment) {
+            return response()->json(['error' => 'There is no apartment with this id'], 404);
+        }
+
+        Appartment::where('id', $id)->update(['is_approved' => false]);
+
+            return response()->json(['message' => 'The apartment has been rejected successfully.'] , 200);
+       
     }
 }

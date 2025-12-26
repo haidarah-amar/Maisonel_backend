@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Appartmentcontroller;
+use App\Http\Controllers\availableApartmentsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerOrderController;
@@ -16,7 +17,23 @@ use Termwind\Components\Raw;
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/appartment/index', [Appartmentcontroller::class, 'index']);
+Route::get('/availableApartments', [availableApartmentsController::class, 'index']);
+
+Route::group(
+    [
+        'prefix' => 'admin',
+        'middleware' => 'auth:sanctum',
+    ],
+    function () {
+        Route::post('/approveUser/{id}', [AdminController::class, 'approveUser']);
+        Route::post('/rejectUser/{id}', [AdminController::class, 'rejectUser']);
+        Route::post('/approveAppartment/{id}', [AdminController::class, 'approveAppartment']);
+        Route::post('/rejectAppartment/{id}', [AdminController::class, 'rejectAppartment']);
+
+        Route::get('/allUsers', [AdminController::class, 'allUsers']);
+        Route::get('/allApartments', [AdminController::class, 'allApartments']);
+    }    
+);
 
 Route::group(
     [
