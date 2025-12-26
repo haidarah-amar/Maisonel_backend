@@ -44,12 +44,6 @@ public function update(UpdateOrderRequest $request, $id)
 {
     $user = Auth::guard('sanctum')->user();
 
-    if (! $user) {
-        return response()->json([
-            'message' => 'Unauthorized'
-        ], 401);
-    }
-
     $order = Order::where('id', $id)
         ->where('user_id', $user->id)
         ->first();
@@ -59,21 +53,32 @@ public function update(UpdateOrderRequest $request, $id)
             'message' => 'Order not found'
         ], 404);
     }
-
-    if ($order->status !== 'pending') {
-        return response()->json([
-            'message' => 'Only pending orders can be updated'
-        ], 409);
-    }
-
+    
     $validatedData = $request->validated();
 
-    $order->update($validatedData);
+    if ($order->status === 'pending') {
+        $order->update($validatedData);
+
+        return response()->json([
+            'message' => 'Order updated successfully',
+            'order' => $order
+        ]);
+    }
+
+    if ($order->status === 'confirmed') {
+        $order->update([
+            'pending_changes' => $validatedData,
+            'change_status'   => 'pending',
+        ]);
+
+        return response()->json([
+            'message' => 'Modification request sent to owner for approval',
+        ]);
+    }
 
     return response()->json([
-        'message' => 'Order updated successfully',
-        'order'   => $order,
-    ], 200);
+        'message' => 'Order cannot be updated'
+    ], 409);
 }
 
 

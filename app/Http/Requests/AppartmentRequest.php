@@ -36,7 +36,6 @@ class AppartmentRequest extends FormRequest
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
             // is_favorite is stored as enum('yes','no') in DB — validate accordingly
-            'is_favorite' => 'nullable|in:yes,no',
             'type' => 'required|in:apartment,house,studio,villa',
             'rating' => 'nullable|in:1,2,3,4,5',
             'views' => 'nullable|integer',

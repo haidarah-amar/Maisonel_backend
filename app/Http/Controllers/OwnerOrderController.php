@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appartment;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -110,6 +111,73 @@ public function reject($id)
         'message' => 'Order rejected successfully',
         'order'   => $order
     ], 200);
+}
+
+public function approveModification($orderId)
+{
+    $user = Auth::guard('sanctum')->user();
+    $order = Order::findOrFail($orderId);
+
+    $apartment = Appartment::findOrFail($order->appartment_id);
+    if ($apartment->owner_id !== $user->id) {
+        return response()->json([
+            'message' => 'Forbidden'
+        ], 403);
+    }
+
+    if ($order->change_status !== 'pending' || empty($order->pending_changes)) {
+        return response()->json([
+            'message' => 'No pending modifications'
+        ], 409);
+    }
+
+    $allowedFields = [
+        'guest_count',
+        'check_in_date',
+        'check_out_date',
+    ];
+
+    $approvedChanges = collect($order->pending_changes)
+        ->only($allowedFields)
+        ->toArray();
+
+    $order->update(array_merge(
+        $approvedChanges,
+        [
+            'pending_changes' => null,
+            'change_status' => 'none',
+        ]
+    ));
+
+    return response()->json([
+        'message' => 'Modification approved',
+        'order' => $order->fresh()
+    ]);
+}
+public function rejectModification($orderId)
+{
+    $user = Auth::guard('sanctum')->user();
+    $order = Order::findOrFail($orderId);
+
+    $apartment = Appartment::findOrFail($order->appartment_id);
+    if ($apartment->owner_id !== $user->id) {
+        return response()->json([
+            'message' => 'Forbidden'
+        ], 403);
+    }
+    if ($order->change_status !== 'pending' || empty($order->pending_changes)) {
+        return response()->json([
+            'message' => 'No pending modifications'
+        ], 409);
+    }
+    $order->update([
+        'pending_changes' => null,
+        'change_status' => 'none',
+    ]);
+
+    return response()->json([
+        'message' => 'Modification rejected, order unchanged'
+    ]);
 }
 
 

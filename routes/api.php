@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Appartmentcontroller;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerOrderController;
 use App\Models\Appartment;
@@ -14,7 +15,7 @@ use Termwind\Components\Raw;
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/logout', [UserController::class, 'logout']);
+Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/appartment/index', [Appartmentcontroller::class, 'index']);
 
 Route::group(
@@ -49,5 +50,19 @@ Route::group(['prefix' => 'order/owner', 'middleware' => 'auth:sanctum'], functi
     Route::get('/show/{id}', [OwnerOrderController::class, 'show']);
     Route::post('/reject/{id}' , [OwnerOrderController::class, 'reject']);
     Route::post('/approve/{id}' , [OwnerOrderController::class, 'approve']);
+    Route::post('/approve_update/{id}',[OwnerOrderController::class, 'approveModification']);
+    Route::post('/reject_update/{id}',[OwnerOrderController::class, 'rejectModification']);
+
     }
 );
+
+// favorites routes
+Route::group(['prefix' => '/favorites', 'middleware' => 'auth:sanctum'], function () {
+ 
+    // toggle favorite (add/remove)
+    Route::post('/toggle/{appartmentId}', [FavoriteController::class, 'toggle']);
+    Route::get('/index', [FavoriteController::class, 'index']);
+    }
+); 
+
+

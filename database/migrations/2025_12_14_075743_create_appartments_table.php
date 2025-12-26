@@ -22,9 +22,8 @@ return new class extends Migration {
             $table->boolean('is_approved')->default(false); //admin approval
             $table->integer('bedrooms');
             $table->integer('bathrooms');
-            $table->enum('is_favorite', ['yes', 'no'])->default('no');
             $table->enum('type',['apartment','house','studio','villa'])->default('apartment');
-            $table->enum('rating',['1','2','3','4','5'])->default('3');
+            $table->enum('rating',['1','2','3','4','5'])->nullable();
             $table->integer('views')->default(0);
             $table->string('location');
             $table->string('image_url')->nullable();

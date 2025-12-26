@@ -54,11 +54,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id');
     }
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    
+    public function favoriteAppartments()
+{
+    return $this->belongsToMany(
+        Appartment::class,
+        'favorite'
+    )->withTimestamps();
+}
+
     protected $casts = [
         // 'email_verified_at' => 'datetime',
         // 'password' => 'hashed',

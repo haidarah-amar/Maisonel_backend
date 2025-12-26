@@ -12,7 +12,6 @@ namespace App\Models {
      * @property mixed $views
      * @property mixed $rating
      * @property mixed $type
-     * @property mixed $is_favorite
      * @property mixed $bathrooms
      * @property mixed $bedrooms
      * @property bool $is_approved
@@ -24,6 +23,8 @@ namespace App\Models {
      * @property mixed $owner_id
      * @property int $id
      * @property-read \App\Models\User $owner
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $favoritedByUsers
+     * @property-read int|null $favoritedByUsers_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
      * @property-read int|null $orders_count
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereId($value)
@@ -36,7 +37,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereIsApproved($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereBedrooms($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereBathrooms($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereIsFavorite($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereRating($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Appartment>|Appartment whereViews($value)
@@ -349,6 +349,10 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $change_status
+     * @property array|null $pending_changes
+     * @property mixed $rating
+     * @property mixed $payment_method
      * @property mixed $status
      * @property float $total_cost
      * @property float $price_per_night
@@ -369,6 +373,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order wherePricePerNight($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereTotalCost($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order wherePaymentMethod($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereRating($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order wherePendingChanges($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereChangeStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Order>|Order newModelQuery()
@@ -1011,6 +1019,8 @@ namespace App\Models {
      * @property-read int|null $ownerAppartments_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders
      * @property-read int|null $orders_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Appartment> $favoriteAppartments
+     * @property-read int|null $favoriteAppartments_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
      * @property-read int|null $tokens_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications

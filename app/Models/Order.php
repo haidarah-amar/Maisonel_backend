@@ -8,6 +8,11 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+    'pending_changes' => 'array',
+];
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
