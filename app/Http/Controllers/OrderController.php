@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
     
-
 public function store(StoreOrderRequest $request)
 {
     $user = Auth::guard('sanctum')->user();
@@ -160,4 +159,37 @@ public function unavailableDates($appartmentId)
     ]);
 }
 
+public function rating(Request $request, $id)
+{
+    $user = Auth::guard('sanctum')->user();
+
+    $order = Order::where('id', $id)
+        ->where('user_id', $user->id)
+        ->where('status', 'completed')
+        ->first();
+
+    if (! $order) {
+        return response()->json([
+            'message' => 'Order not found or not eligible for rating'
+        ], 404);
+    }
+    if ($order->rating !== null) {
+    return response()->json([
+        'message' => 'You have already rated this order'
+    ], 409);
+}
+
+
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+    ]);
+    
+
+    $order->update([
+        'rating' => $request->rating,
+    ]);
+
+    return response()->json(['message' => 'Thank you for your feedback!'] , 200);
+
+}
 }

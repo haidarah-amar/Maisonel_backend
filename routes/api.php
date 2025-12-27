@@ -59,6 +59,7 @@ Route::group(['prefix' => 'order/user', 'middleware' => 'auth:sanctum'], functio
     Route::get('/show/{id}', [OrderController::class, 'show']);
     Route::delete('/cancle/{id}' , [OrderController::class, 'destroy']);
     Route::get('/unavailable_dates/{appartmentId}', [OrderController::class, 'unavailableDates']);
+    Route::post('/rate/{id}', [OrderController::class, 'rating']);
     }
 );
 
