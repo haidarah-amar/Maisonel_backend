@@ -24,7 +24,6 @@ return new class extends Migration {
             $table->integer('bedrooms');
             $table->integer('bathrooms');
             $table->enum('type',['apartment','house','studio','villa'])->default('apartment');
-            $table->enum('rating',['1','2','3','4','5'])->nullable();
             $table->integer('views')->default(0);
             $table->string('image_url')->nullable();
             $table->timestamps();

@@ -19,6 +19,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/availableApartments', [availableApartmentsController::class, 'index']);
+Route::get('/filter', [availableApartmentsController::class, 'filter']);
 
 Route::group(
     [
@@ -88,10 +89,10 @@ Route::group(['prefix' => '/favorites', 'middleware' => 'auth:sanctum'], functio
 
 Route::group(['prefix' => '/rating', 'middleware' => 'auth:sanctum'], function () {
  
-    // toggle favorite (add/remove)
+    // rating routes
     Route::post('/store/{orderId}', [RatingController::class, 'store']);
     Route::post('/update/{ratingId}', [RatingController::class, 'update']);
-    Route::get('/index', [RatingController::class, 'index']);
+    Route::get('/index/{id}', [RatingController::class, 'index']);
     }
 ); 
 

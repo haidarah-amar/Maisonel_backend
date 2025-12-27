@@ -68,7 +68,7 @@ public function update(Request $request, $ratingId)
     }
 
     $request->validate([
-        'rating'  => 'required|integer|min:1|max:5',
+        'rating'  => 'sometimes|integer|min:1|max:5',
         'comment' => 'nullable|string|max:1000',
     ]);
 
@@ -86,7 +86,7 @@ public function update(Request $request, $ratingId)
 public function index($id)
 {
     $appartment = Appartment::with([
-        'ratings.user:id,name'
+        'ratings.user:id,first_name,last_name'
     ])->find($id);
 
     if (! $appartment) {
