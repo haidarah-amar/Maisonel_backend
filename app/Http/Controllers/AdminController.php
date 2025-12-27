@@ -22,6 +22,20 @@ class AdminController extends Controller
         return response()->json($apartments);
     }
 
+    // ========================================================================================
+
+    public function allActiveUsers()
+    {
+        $users = User::where('is_active', true)->get();
+        return response()->json($users);
+    }
+
+    public function allApprovedApartments()
+    {
+        $apartments = Appartment::where('is_approved', true)->get();
+        return response()->json($apartments);
+    }
+
     // =========================================================================================
 
     public function approveUser(Request $request, $id)

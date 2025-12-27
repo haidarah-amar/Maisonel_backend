@@ -32,6 +32,8 @@ Route::group(
 
         Route::get('/allUsers', [AdminController::class, 'allUsers']);
         Route::get('/allApartments', [AdminController::class, 'allApartments']);
+        Route::get('/allActiveUsers', [AdminController::class, 'allActiveUsers']);
+        Route::get('/allApprovedApartments', [AdminController::class, 'allApprovedApartments']);
     }    
 );
 
