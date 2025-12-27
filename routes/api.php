@@ -7,6 +7,7 @@ use App\Http\Controllers\availableApartmentsController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerOrderController;
+use App\Http\Controllers\RatingController;
 use App\Models\Appartment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,15 @@ Route::group(['prefix' => '/favorites', 'middleware' => 'auth:sanctum'], functio
     // toggle favorite (add/remove)
     Route::post('/toggle/{appartmentId}', [FavoriteController::class, 'toggle']);
     Route::get('/index', [FavoriteController::class, 'index']);
+    }
+); 
+
+Route::group(['prefix' => '/rating', 'middleware' => 'auth:sanctum'], function () {
+ 
+    // toggle favorite (add/remove)
+    Route::post('/store/{orderId}', [RatingController::class, 'store']);
+    Route::post('/update/{ratingId}', [RatingController::class, 'update']);
+    Route::get('/index', [RatingController::class, 'index']);
     }
 ); 
 

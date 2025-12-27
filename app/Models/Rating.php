@@ -4,28 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Rating extends Model
 {
     protected $guarded = [];
-
-    protected $casts = [
-    'pending_changes' => 'array',
-];
-
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function appartment()
     {
         return $this->belongsTo(Appartment::class);
     }
 
-    public function rating()
-{
-    return $this->hasOne(Rating::class);
-}
-
-
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Appartment;
 use App\Models\Order;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
@@ -192,4 +193,5 @@ public function rating(Request $request, $id)
     return response()->json(['message' => 'Thank you for your feedback!'] , 200);
 
 }
+
 }

@@ -62,6 +62,10 @@ class User extends Authenticatable
         'favorite'
     )->withTimestamps();
 }
+public function ratings()
+{
+    return $this->hasMany(Rating::class);
+}
 
     protected $casts = [
         // 'email_verified_at' => 'datetime',

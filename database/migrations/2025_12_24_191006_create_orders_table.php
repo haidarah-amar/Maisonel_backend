@@ -24,7 +24,6 @@ return new class extends Migration
             $table->decimal('total_cost', 10, 2); // Max -> the number is total 10 numbers with 2 after decimal 99,999,999.99
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled' , 'rejected' ])->default('pending');
             $table->enum('payment_method', ['credit_card', 'paypal', 'bank_transfer'])->nullable();
-            $table->enum('rating', [1, 2, 3, 4, 5])->nullable();
             $table->json('pending_changes')->nullable();
             $table->enum('change_status', ['none', 'pending'])->default('none');
    

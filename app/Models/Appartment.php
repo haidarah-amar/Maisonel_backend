@@ -29,16 +29,15 @@ class Appartment extends Model
 }
 
 
+
     public function orders()
     {
         return $this->hasMany(Order::class , 'appartment_id');
     }
 
-    /**
-     * The current renter/tenant of the appartment (nullable).
-     */
-    // public function renter(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
+    public function ratings()
+{
+    return $this->hasMany(Rating::class);
+}
+
 }
