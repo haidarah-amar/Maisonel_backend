@@ -24,7 +24,7 @@ Route::get('/filter', [availableApartmentsController::class, 'filter']);
 Route::group(
     [
         'prefix' => 'admin',
-        'middleware' => 'auth:sanctum',
+        'middleware' => ['auth:sanctum', 'admin'],
     ],
     function () {
         Route::post('/approveUser/{id}', [AdminController::class, 'approveUser']);
@@ -35,6 +35,8 @@ Route::group(
         Route::get('/allUsers', [AdminController::class, 'allUsers']);
         Route::get('/allApartments', [AdminController::class, 'allApartments']);
         Route::get('/allActiveUsers', [AdminController::class, 'allActiveUsers']);
+        Route::get('/allRejectedUsers', [AdminController::class, 'allRejectedUsers']);
+        Route::get('/allPendingUsers', [AdminController::class, 'allPendingUsers']);
         Route::get('/allApprovedApartments', [AdminController::class, 'allApprovedApartments']);
     }    
 );
