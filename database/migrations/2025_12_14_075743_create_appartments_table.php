@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('description');
             $table->float('price');
-            $table->boolean('is_approved')->default(false); //admin approval
+            $table->boolean('is_active')->default(0); // -1: rejected, 0: pending, 1: active
             $table->integer('bedrooms');
             $table->integer('bathrooms');
             $table->enum('type',['apartment','house','studio','villa'])->default('apartment');

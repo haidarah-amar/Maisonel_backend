@@ -44,7 +44,7 @@ class AdminController extends Controller
 
     public function allApprovedApartments()
     {
-        $apartments = Appartment::where('is_approved', true)->get();
+        $apartments = Appartment::where('is_active', 1)->get();
         return response()->json($apartments);
     }
 
@@ -52,8 +52,6 @@ class AdminController extends Controller
 
     public function approveUser(Request $request, $id)
     {
-
-
         $user = User::findOrFail($id);
 
         if (! $user) {
