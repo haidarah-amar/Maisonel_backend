@@ -12,13 +12,13 @@ class AdminController extends Controller
 {
     public function allUsers()
     {
-        $users = User::where('is_active', false)->get();
+        $users = User::all();
         return response()->json($users);
     }
 
     public function allApartments()
     {
-        $apartments = Appartment::where('is_approved', false)->get();
+        $apartments = Appartment::all();
         return response()->json($apartments);
     }
 
@@ -26,7 +26,19 @@ class AdminController extends Controller
 
     public function allActiveUsers()
     {
-        $users = User::where('is_active', true)->get();
+        $users = User::where('is_active', 1)->get();
+        return response()->json($users);
+    }
+
+    public function allPendingUsers()
+    {
+        $users = User::where('is_active', 0)->get();
+        return response()->json($users);
+    }
+
+    public function allRejectedUsers()
+    {
+        $users = User::where('is_active', -1)->get();
         return response()->json($users);
     }
 
@@ -48,7 +60,7 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no user, who has this id'], 404);
         }
         
-        User::where('id', $id)->update(['is_active' => true]);
+        User::where('id', $id)->update(['is_active' => 1]);
         return response()->json(['message' => 'User approved successfully.'] , 200);
         
     }
@@ -61,7 +73,7 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no user, who has this id'], 404);
         }
         
-        User::where('id', $id)->update(['is_active' => false]);
+        User::where('id', $id)->update(['is_active' => -1]);
         return response()->json(['message' => 'User rejected successfully.'] , 200);
 
     }

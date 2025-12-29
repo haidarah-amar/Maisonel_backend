@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+            'admin' => \App\Http\Middleware\checkAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -12,8 +12,9 @@ class checkAdmin
     
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::guard('sanctum')->user()->role === 'admin') 
-        return $next($request);
+        if (Auth::guard('sanctum')->user() && Auth::guard('sanctum')->user()->role === 'admin') {
+            return $next($request);
+        }
         return response()->json(['message' => 'Unauthorized'], 403);
     
     }
