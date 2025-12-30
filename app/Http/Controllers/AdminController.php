@@ -99,7 +99,7 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no apartment with this id'], 404);
         }
 
-        Appartment::where('id', $id)->update(['is_active' => 1]);
+        Appartment::where('id', $id)->update(['is_approved' => 1]);
 
             return response()->json(['message' => 'The apartment has been approved successfully.'] , 200);
         }
@@ -112,7 +112,7 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no apartment with this id'], 404);
         }
 
-        Appartment::where('id', $id)->update(['is_active' => -1]);
+        Appartment::where('id', $id)->update(['is_approved' => -1]);
 
             return response()->json(['message' => 'The apartment has been rejected successfully.'] , 200);
        

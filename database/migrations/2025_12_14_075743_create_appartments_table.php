@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('description');
             $table->float('price');
-            $table->boolean('is_active')->default(0); // -1: rejected, 0: pending, 1: active
+            $table->boolean('is_active')->default(0); 
             $table->integer('is_approved')->default(0); // -1: rejected, 0: pending, 1: active
             $table->integer('bedrooms');
             $table->integer('bathrooms');
