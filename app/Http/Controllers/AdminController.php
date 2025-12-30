@@ -44,19 +44,19 @@ class AdminController extends Controller
 
     public function allApprovedApartments()
     {
-        $apartments = Appartment::where('is_active', 1)->get();
+        $apartments = Appartment::where('is_approved', 1)->get();
         return response()->json($apartments);
     }
 
     public function allPendingApartments()
     {
-        $apartments = Appartment::where('is_active', 0)->get();
+        $apartments = Appartment::where('is_approved', 0)->get();
         return response()->json($apartments);
     }
 
     public function allRejectedApartments()
     {
-        $apartments = Appartment::where('is_active', -1)->get();
+        $apartments = Appartment::where('is_approved', -1)->get();
         return response()->json($apartments);
     }
 

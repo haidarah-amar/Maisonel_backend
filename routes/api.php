@@ -18,8 +18,8 @@ use Termwind\Components\Raw;
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/availableApartments', [availableApartmentsController::class, 'index']);
-Route::get('/filter', [availableApartmentsController::class, 'filter']);
+Route::get('/availableApartments', [availableApartmentsController::class, 'available']);
+Route::get('/ownedApartments', [availableApartmentsController::class, 'owned']);
 
 Route::group(
     [
