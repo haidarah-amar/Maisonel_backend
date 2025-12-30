@@ -33,6 +33,10 @@ class User extends Authenticatable
         'birth_date',
         'photo',
         'id_document',
+        'telegram_chat_id',
+        'verification_code',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -43,7 +47,27 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'verification_code',
+        'otp_code',
+        'otp_expires_at',
     ];
+    /**
+     * Normalize and Validate Syrian Phone Number
+     * Expected format: 09xxxxxxxx or +9639xxxxxxxx
+     */
+    public static function validateSyrianNumber($phone)
+    {
+        // Remove spaces and dashes
+        $phone = preg_replace('/[\s\-]/', '', $phone);
+
+        // Regex for Syrian Mobile (Starts with +9639 or 009639 or 09)
+        // Total digits excluding country code is 9 (e.g. 944 123 456)
+        if (preg_match('/^(?:\+963|00963|0)?(9\d{8})$/', $phone, $matches)) {
+            return '+963' . $matches[1]; // Standardize to E.164 format
+        }
+
+        return false;
+    }
 
     // Appartments owned by this user
     public function ownerAppartments()

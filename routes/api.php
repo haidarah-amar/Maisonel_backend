@@ -15,11 +15,12 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TelegramAuthController;
 
-Route::post('/telegram/webhook', [TelegramAuthController::class, 'handleWebhook']);
-Route::post('sendotp', [UserController::class, 'sendOtp']);
-
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
+Route::post('/verifyOtp', [UserController::class, 'verifyOtp']);
+// Telegram Webhook (Must be set in Telegram Bot Settings)
+Route::post('/telegram/webhook', [TelegramAuthController::class, 'handleWebhook']);
+
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/availableApartments', [availableApartmentsController::class, 'index']);
 Route::get('/filter', [availableApartmentsController::class, 'filter']);
