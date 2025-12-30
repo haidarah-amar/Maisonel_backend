@@ -11,12 +11,12 @@ class availableApartmentsController extends Controller
     public function index()
     {
         $user = Auth::guard('sanctum')->user();
-        $availableApartments = Appartment::where('is_approved', true)->where('owner_id', '!=', $user->id)->get();
+        $availableApartments = Appartment::where('is_active', true)->where('owner_id', '!=', $user->id)->get();
         return response()->json($availableApartments, 200);
     }
   public function filter(Request $request)
 {
-    $query = Appartment::where('is_approved', 1);
+    $query = Appartment::where('is_active', 1);
 
     if ($request->has('city')) {
         $query->where('city', $request->city);
