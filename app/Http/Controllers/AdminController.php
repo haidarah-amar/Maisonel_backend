@@ -79,7 +79,7 @@ class AdminController extends Controller
     // ===============================================================================================================
 
 
-    public function approveAppartment(Request $request, $id)
+    public function approveApartment(Request $request, $id)
     {
         $apartment = Appartment::findOrFail($id);
 
@@ -92,7 +92,7 @@ class AdminController extends Controller
             return response()->json(['message' => 'The apartment has been approved successfully.'] , 200);
         }
 
-    public function rejectAppartment(Request $request, $id)
+    public function rejectApartment(Request $request, $id)
     {
         $apartment = Appartment::findOrFail($id);
 

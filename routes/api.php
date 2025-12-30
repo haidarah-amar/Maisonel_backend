@@ -29,8 +29,8 @@ Route::group(
     function () {
         Route::post('/approveUser/{id}', [AdminController::class, 'approveUser']);
         Route::post('/rejectUser/{id}', [AdminController::class, 'rejectUser']);
-        Route::post('/approveAppartment/{id}', [AdminController::class, 'approveAppartment']);
-        Route::post('/rejectAppartment/{id}', [AdminController::class, 'rejectAppartment']);
+        Route::post('/approveApartment/{id}', [AdminController::class, 'approveApartment']);
+        Route::post('/rejectApartment/{id}', [AdminController::class, 'rejectApartment']);
 
         Route::get('/allUsers', [AdminController::class, 'allUsers']);
         Route::get('/allApartments', [AdminController::class, 'allApartments']);
@@ -43,7 +43,7 @@ Route::group(
 
 Route::group(
     [
-        'prefix' => 'appartment',
+        'prefix' => 'apartment',
         'middleware' => 'auth:sanctum',
     ],
     function () {
