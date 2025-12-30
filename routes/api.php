@@ -38,6 +38,8 @@ Route::group(
         Route::get('/allRejectedUsers', [AdminController::class, 'allRejectedUsers']);
         Route::get('/allPendingUsers', [AdminController::class, 'allPendingUsers']);
         Route::get('/allApprovedApartments', [AdminController::class, 'allApprovedApartments']);
+        Route::get('/allPendingApartments', [AdminController::class, 'allPendingApartments']);
+        Route::get('/allRejectedApartments', [AdminController::class, 'allRejectedApartments']);        
     }    
 );
 
