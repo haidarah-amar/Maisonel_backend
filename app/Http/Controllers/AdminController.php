@@ -44,7 +44,19 @@ class AdminController extends Controller
 
     public function allApprovedApartments()
     {
-        $apartments = Appartment::where('is_active', 1)->get();
+        $apartments = Appartment::where('is_approved', 1)->get();
+        return response()->json($apartments);
+    }
+
+    public function allPendingApartments()
+    {
+        $apartments = Appartment::where('is_approved', 0)->get();
+        return response()->json($apartments);
+    }
+
+    public function allRejectedApartments()
+    {
+        $apartments = Appartment::where('is_approved', -1)->get();
         return response()->json($apartments);
     }
 
@@ -79,7 +91,7 @@ class AdminController extends Controller
     // ===============================================================================================================
 
 
-    public function approveAppartment(Request $request, $id)
+    public function approveApartment(Request $request, $id)
     {
         $apartment = Appartment::findOrFail($id);
 
@@ -87,12 +99,12 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no apartment with this id'], 404);
         }
 
-        Appartment::where('id', $id)->update(['is_approved' => true]);
+        Appartment::where('id', $id)->update(['is_active' => 1]);
 
             return response()->json(['message' => 'The apartment has been approved successfully.'] , 200);
         }
 
-    public function rejectAppartment(Request $request, $id)
+    public function rejectApartment(Request $request, $id)
     {
         $apartment = Appartment::findOrFail($id);
 
@@ -100,7 +112,7 @@ class AdminController extends Controller
             return response()->json(['error' => 'There is no apartment with this id'], 404);
         }
 
-        Appartment::where('id', $id)->update(['is_approved' => false]);
+        Appartment::where('id', $id)->update(['is_active' => -1]);
 
             return response()->json(['message' => 'The apartment has been rejected successfully.'] , 200);
        

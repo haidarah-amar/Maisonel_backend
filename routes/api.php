@@ -21,8 +21,8 @@ Route::post('sendotp', [UserController::class, 'sendOtp']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/availableApartments', [availableApartmentsController::class, 'index']);
-Route::get('/filter', [availableApartmentsController::class, 'filter']);
+Route::get('/availableApartments', [availableApartmentsController::class, 'available']);
+Route::get('/ownedApartments', [availableApartmentsController::class, 'owned']);
 
 Route::group(
     [
@@ -32,8 +32,8 @@ Route::group(
     function () {
         Route::post('/approveUser/{id}', [AdminController::class, 'approveUser']);
         Route::post('/rejectUser/{id}', [AdminController::class, 'rejectUser']);
-        Route::post('/approveAppartment/{id}', [AdminController::class, 'approveAppartment']);
-        Route::post('/rejectAppartment/{id}', [AdminController::class, 'rejectAppartment']);
+        Route::post('/approveApartment/{id}', [AdminController::class, 'approveApartment']);
+        Route::post('/rejectApartment/{id}', [AdminController::class, 'rejectApartment']);
 
         Route::get('/allUsers', [AdminController::class, 'allUsers']);
         Route::get('/allApartments', [AdminController::class, 'allApartments']);
@@ -46,7 +46,7 @@ Route::group(
 
 Route::group(
     [
-        'prefix' => 'appartment',
+        'prefix' => 'apartment',
         'middleware' => 'auth:sanctum',
     ],
     function () {

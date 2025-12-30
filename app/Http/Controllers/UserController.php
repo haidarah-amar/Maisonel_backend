@@ -72,6 +72,9 @@ class UserController extends Controller
         if ($user->is_active == false) {
             return response()->json(['message' => 'Your account is not active. Please wait until an admin activates it.'], 403);
         }
+        if ($user->is_active == -1) {
+            return response()->json(['message' => 'Your account is rejected. Contact an admin for more info.'], 403);
+        }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
