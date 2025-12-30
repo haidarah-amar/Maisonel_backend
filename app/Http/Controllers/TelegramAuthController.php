@@ -5,77 +5,50 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramAuthController extends Controller
 {
-    // دالة لاستقبال الويب هوك من تيليجرام
-    public function handleWebhook(Request $request)
+    public function handleWebhook()
     {
-        $data = $request->all();
+        $update = Telegram::commandsHandler(true);
 
-        // التأكد من أن الرسالة تحتوي على جهة اتصال (Contact)
-        if (isset($data['message']['contact'])) {
-            $chatId = $data['message']['chat']['id'];
-            $phoneNumber = $data['message']['contact']['phone_number'];
-            $userIdFromContact = $data['message']['contact']['user_id'];
+        // Check if it's a message
+        if ($update->getMessage()) {
+            $message = $update->getMessage();
+            $chatId = $message->getChat()->getId();
+            $text = $message->getText();
 
-            // تنظيف الرقم السوري (قد يصل 963 أو +963)
-            // تأكد من توحيد الصيغة
-            if (!str_starts_with($phoneNumber, '+')) {
-                $phoneNumber = '+' . $phoneNumber;
-            }
-
-            // البحث عن المستخدم وتحديث Chat ID
-            $user = User::where('phone_number', $phoneNumber)->first();
-
-            if ($user) {
-                $user->telegram_chat_id = $chatId;
-                $user->save();
-
-                // إرسال رسالة ترحيب
-                $this->sendMessage($chatId, "تم ربط حسابك بنجاح! يمكنك الآن استقبال رموز التحقق.");
-            } else {
-                 $this->sendMessage($chatId, "عذراً، هذا الرقم غير مسجل في نظامنا.");
+            // Handle /start command with payload (e.g., /start vCode123)
+            if (str_starts_with($text, '/start ')) {
+                $code = explode(' ', $text)[1];
+                $this->linkUser($chatId, $code);
             }
         }
 
-        // التعامل مع أمر /start
-        elseif (isset($data['message']['text']) && $data['message']['text'] == '/start') {
-            $chatId = $data['message']['chat']['id'];
-            // طلب مشاركة الرقم من المستخدم
-            $this->requestContact($chatId);
+        return response()->json(['status' => 'ok']);
+    }
+
+    private function linkUser($chatId, $code)
+    {
+        $user = User::where('verification_code', $code)->first();
+
+        if ($user) {
+            $user->update([
+                'telegram_chat_id' => $chatId,
+                'verification_code' => null, // Clear code after usage
+                'email_verified_at' => now(), // Mark as "verified"
+            ]);
+
+            Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => "✅ Phone number linked successfully! You can now receive OTPs here."
+            ]);
+        } else {
+            Telegram::sendMessage([
+                'chat_id' => $chatId,
+                'text' => "⚠️ Invalid or expired verification link."
+            ]);
         }
-
-        return response('OK', 200);
-    }
-
-    // دالة مساعدة لطلب الرقم (زر خاص)
-    private function requestContact($chatId)
-    {
-        $keyboard = [
-            'keyboard' => [
-                [
-                    ['text' => 'مشاركة رقم هاتفي للتحقق', 'request_contact' => true]
-                ]
-            ],
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true
-        ];
-
-        Http::post("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendMessage", [
-            'chat_id' => $chatId,
-            'text' => 'مرحباً! يرجى الضغط على الزر أدناه لمشاركة رقمك السوري والتحقق من هويتك.',
-            'reply_markup' => json_encode($keyboard)
-        ]);
-    }
-
-    // دالة إرسال رسالة عادية
-    private function sendMessage($chatId, $text)
-    {
-        Http::post("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendMessage", [
-            'chat_id' => $chatId,
-            'text' => $text,
-            'parse_mode' => 'HTML'
-        ]);
     }
 }
