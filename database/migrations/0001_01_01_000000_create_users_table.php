@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,6 +16,9 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone')->unique();
             $table->timestamp('phone_verified_at')->nullable();
+            $table->string('telegram_chat_id')->nullable(); // معرف الشات
+            $table->string('otp_code')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
             $table->string('password');
             $table->date('birth_date');
             $table->string('photo')->nullable();

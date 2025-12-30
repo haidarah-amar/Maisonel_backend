@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Contracts\Providers\JWT;
+use App\Models\Appartment;
+use App\Models\Order;
+use App\Models\Rating;
+use App\Models\CreditCard;
 
 class User extends Authenticatable
 {
@@ -54,7 +58,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id');
     }
-    
+
     public function favoriteAppartments()
 {
     return $this->belongsToMany(
@@ -66,6 +70,11 @@ public function ratings()
 {
     return $this->hasMany(Rating::class);
 }
+public function creditCards()
+{
+    return $this->hasMany(CreditCard::class);
+}
+
 
     protected $casts = [
         // 'email_verified_at' => 'datetime',

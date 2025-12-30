@@ -11,7 +11,7 @@ use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
-    
+
 public function store(StoreOrderRequest $request)
 {
     $user = Auth::guard('sanctum')->user();
@@ -53,7 +53,7 @@ public function update(UpdateOrderRequest $request, $id)
             'message' => 'Order not found'
         ], 404);
     }
-    
+
     $validatedData = $request->validated();
 
     if ($order->status === 'pending') {
@@ -184,7 +184,7 @@ public function rating(Request $request, $id)
     $request->validate([
         'rating' => 'required|integer|min:1|max:5',
     ]);
-    
+
 
     $order->update([
         'rating' => $request->rating,

@@ -13,7 +13,7 @@ class Appartment extends Model
         'image_url' => 'array',
     ];
 
-    
+
 
     public function owner(): BelongsTo
     {
