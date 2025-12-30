@@ -112,10 +112,6 @@ class UserController extends Controller
         if ($user->is_active == false) {
             return response()->json(['message' => 'Your account is not active. Please wait until an admin activates it.'], 403);
         }
-        if (!$user || !$user->telegram_chat_id) {
-            return response()->json(['error' => 'User not found or Telegram not linked.'], 404);
-        }
-
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'message' => 'Login successful',
@@ -146,7 +142,7 @@ class UserController extends Controller
                 'otp_expires_at' => null,
                 'phone_verified_at' => now()
             ]);
-            
+
 
             return response()->json([
                 'message' => 'Phone verified successfully. waiting for admin activation.',
