@@ -33,7 +33,7 @@ class AppartmentRequest extends FormRequest
             'price' => 'required|numeric',
             'bedrooms' => 'required|integer',
             'bathrooms' => 'required|integer',
-            'type' => 'required|in:apartment,house,studio,villa',
+            'type' => 'required|in:Apartment,House,Studio,Villa',
             'location' => 'required|string',
             // allow multiple images as array of files or array of URLs; each file max 5MB
             'image_url' => 'nullable|array',

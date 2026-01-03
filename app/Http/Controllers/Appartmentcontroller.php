@@ -225,6 +225,24 @@ class Appartmentcontroller extends Controller
     return response()->json(['message' => 'Image deleted successfully']);
 }
 
+public function toggleStatus($id)
+{
+    $user = Auth::user();
+    $appartment = Appartment::findOrFail($id);
+
+    if ($appartment->owner_id !== $user->id) {
+        return response()->json(['message' => 'This apartment does not belong to you'], 403);
+    }
+
+    $appartment->is_active = !$appartment->is_active;
+    $appartment->save();
+
+    return response()->json([
+        'message' => $appartment->is_active ? 'Apartment activated' : 'Apartment deactivated',
+        'is_active' => $appartment->is_active
+    ], 200);
+}
+
 
     
 }

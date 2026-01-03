@@ -27,7 +27,7 @@ class UpdateApartmentRequest extends FormRequest
             'bedrooms' => 'sometimes|integer',
             'bathrooms' => 'sometimes|integer',
             'is_favorite' => 'nullable|in:yes,no',
-            'type' => 'sometimes|in:apartment,house,studio,villa',
+            'type' => 'sometimes|in:Apartment,House,Studio,Villa',
             'rating' => 'nullable|in:1,2,3,4,5',
             'views' => 'nullable|integer',
             'location' => 'sometimes|string',

@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->integer('is_approved')->default(0); // -1: rejected, 0: pending, 1: active
             $table->integer('bedrooms');
             $table->integer('bathrooms');
-            $table->enum('type',['apartment','house','studio','villa'])->default('apartment');
+            $table->enum('type',['Apartment','House','Studio','Villa'])->default('Apartment');
             $table->integer('views')->default(0);
             $table->string('image_url')->nullable();
             $table->timestamps();

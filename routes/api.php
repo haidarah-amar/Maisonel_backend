@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
-use Termwind\Components\Raw;
+use App\Http\Controllers\CreditCardController;
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
@@ -53,19 +53,22 @@ Route::group(
         Route::post('/update/{id}', [Appartmentcontroller::class, 'update']);
         Route::delete('/destroy/{id}', [Appartmentcontroller::class, 'destroy']);
         Route::get('/show/{id}', [Appartmentcontroller::class, 'show']);
-        Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);   
-    }    
+        Route::post('/toggle-status/{id}', [Appartmentcontroller::class, 'toggleStatus']);
+        Route::delete('/images/{id}/index/{index}', [Appartmentcontroller::class, 'deleteImage']);
+    }
 );
 // Orders for User's Booking
-Route::group(['prefix' => 'order/user', 'middleware' => 'auth:sanctum'], function () {
-    
-    Route::post('/store', [App\Http\Controllers\OrderController::class, 'store']);
-    Route::post('/update/{id}', [App\Http\Controllers\OrderController::class, 'update']);
-    Route::get('/index', [OrderController::class, 'index']);
-    Route::get('/show/{id}', [OrderController::class, 'show']);
-    Route::delete('/cancle/{id}' , [OrderController::class, 'destroy']);
-    Route::get('/unavailable_dates/{appartmentId}', [OrderController::class, 'unavailableDates']);
-    Route::post('/rate/{id}', [OrderController::class, 'rating']);
+Route::group(
+    ['prefix' => 'order/user', 'middleware' => 'auth:sanctum'],
+    function () {
+
+        Route::post('/store', [OrderController::class, 'store']);
+        Route::post('/update/{id}', [OrderController::class, 'update']);
+        Route::get('/index', [OrderController::class, 'index']);
+        Route::get('/show/{id}', [OrderController::class, 'show']);
+        Route::delete('/cancle/{id}', [OrderController::class, 'destroy']);
+        Route::get('/unavailable_dates/{appartmentId}', [OrderController::class, 'unavailableDates']);
+        Route::post('/rate/{id}', [OrderController::class, 'rating']);
     }
 );
 
@@ -100,4 +103,11 @@ Route::group(['prefix' => '/rating', 'middleware' => 'auth:sanctum'], function (
     }
 ); 
 
+Route::group([
+    'prefix' => 'user',
+    'middleware' => 'auth:sanctum',
+], function () {
+    Route::get('/credit-cards', [CreditCardController::class, 'index']);
+    Route::post('/credit-cards', [CreditCardController::class, 'store']);
+});
 
