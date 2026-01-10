@@ -35,6 +35,8 @@ class AppartmentRequest extends FormRequest
             'bathrooms' => 'required|integer',
             'type' => 'required|in:Apartment,House,Studio,Villa',
             'location' => 'required|string',
+            'amenities' => 'nullable|array',
+            'amenities.*' => 'string|max:255',
             // allow multiple images as array of files or array of URLs; each file max 5MB
             'image_url' => 'nullable|array',
             'image_url.*' => 'nullable|file|image|mimes:jpg,jpeg,png,gif,svg|max:5120',

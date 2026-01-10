@@ -43,6 +43,9 @@ class Appartmentcontroller extends Controller
 
         $validatedData = $request->validated();
 
+        if (isset($validatedData['amenities']) && is_array($validatedData['amenities'])) {
+            $validatedData['amenities'] = array_values($validatedData['amenities']);
+        }
 
         // Force owner_id to the authenticated user and ignore any client-supplied user_id
         $validatedData['owner_id'] = $user->id;
@@ -87,13 +90,6 @@ class Appartmentcontroller extends Controller
 
         // Normalize to null when no images
         $validatedData['image_url'] = count($images) ? $images : null;
-          // admin approve
-            // Requestt::create([
-            //     'user_id' => $user->id,
-            //     'requestable_id' => $appartment->id,
-            //     'requestable_type' => Appartment::class,
-            //     'status' => 'pending',
-            // ]);
 
         $apt = Appartment::create($validatedData);
 
@@ -113,6 +109,9 @@ class Appartmentcontroller extends Controller
     }
 
     $validatedData = $request->validated();
+    if (isset($validatedData['amenities']) && is_array($validatedData['amenities'])) {
+        $validatedData['amenities'] = array_values($validatedData['amenities']);
+    }
     // prevent editing owner_id and user_id
     unset( $validatedData['owner_id']);
 
@@ -172,6 +171,17 @@ class Appartmentcontroller extends Controller
             return response()->json(['message' => 'This apartment does not belong to you'], 403);
         }
         return response()->json($appartment, 200);
+    }
+
+    public function addView($id)
+    {
+        $appartment = Appartment::findOrFail($id);
+        $appartment->increment('views');
+
+        return response()->json([
+            'message' => 'View added',
+            'views' => $appartment->views,
+        ], 200);
     }
 
     public function destroy($id)

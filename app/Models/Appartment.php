@@ -13,6 +13,16 @@ class Appartment extends Model
         'image_url' => 'array',
     ];
 
+    public function getAmenitiesAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    public function setAmenitiesAttribute($value)
+    {
+        $this->attributes['amenities'] = is_array($value) ? json_encode($value) : $value;
+    }
+
     
 
     public function owner(): BelongsTo

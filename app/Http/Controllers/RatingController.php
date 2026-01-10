@@ -16,8 +16,6 @@ class RatingController extends Controller
 
     
     $order = Order::where('id', $orderId)
-        ->where('user_id', $user->id)
-        ->where('status', 'confirmed')
         ->first();
 
     if (! $order) {
@@ -49,7 +47,7 @@ class RatingController extends Controller
     return response()->json([
         'message' => 'Rating submitted successfully',
         'rating'  => $rating
-    ], 201);
+    ], 200);
 }
 
 public function update(Request $request, $ratingId)

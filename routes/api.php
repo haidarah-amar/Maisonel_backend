@@ -20,6 +20,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::delete('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/availableApartments', [availableApartmentsController::class, 'available']);
 Route::get('/ownedApartments', [availableApartmentsController::class, 'owned']);
+Route::post('/apartment/view/{id}', [Appartmentcontroller::class, 'addView']);
 
 Route::group(
     [
@@ -109,5 +110,5 @@ Route::group([
 ], function () {
     Route::get('/credit-cards', [CreditCardController::class, 'index']);
     Route::post('/credit-cards', [CreditCardController::class, 'store']);
+    Route::delete('/credit-cards/{id}', [CreditCardController::class, 'destroy']);
 });
-

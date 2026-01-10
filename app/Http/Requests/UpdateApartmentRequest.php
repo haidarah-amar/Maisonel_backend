@@ -31,6 +31,8 @@ class UpdateApartmentRequest extends FormRequest
             'rating' => 'nullable|in:1,2,3,4,5',
             'views' => 'nullable|integer',
             'location' => 'sometimes|string',
+            'amenities' => 'sometimes|array',
+            'amenities.*' => 'string|max:255',
             'image_url' => 'nullable|array',
             'image_url.*' => 'nullable|file|image|mimes:jpg,jpeg,png,gif,svg|max:5120',
         ];

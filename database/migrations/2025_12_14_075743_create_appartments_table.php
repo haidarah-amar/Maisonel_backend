@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->enum('type',['Apartment','House','Studio','Villa'])->default('Apartment');
             $table->integer('views')->default(0);
             $table->string('image_url')->nullable();
+            $table->json('amenities')->nullable();
             $table->timestamps();
         });
     }
